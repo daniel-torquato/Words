@@ -15,4 +15,3 @@ dependencyResolutionManagement {
 
 rootProject.name = "Words"
 include(":app")
-include(":data")

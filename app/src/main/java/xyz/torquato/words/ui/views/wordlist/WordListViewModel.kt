@@ -5,9 +5,10 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import xyz.torquato.words.ui.views.wordlist.model.WordListUiState
+import javax.inject.Inject
 
 @HiltViewModel
-class WordListViewModel: ViewModel() {
+class WordListViewModel @Inject constructor(): ViewModel() {
     private val _uiState: MutableStateFlow<WordListUiState> = MutableStateFlow(WordListUiState(
         emptyList()
     ))

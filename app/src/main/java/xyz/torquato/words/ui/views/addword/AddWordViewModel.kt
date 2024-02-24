@@ -5,14 +5,21 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import xyz.torquato.words.data.RandomGenerator
 import xyz.torquato.words.ui.views.addword.model.AddWordUiState
-import xyz.torquato.words.ui.views.wordlist.model.WordListUiState
+import javax.inject.Inject
 
 @HiltViewModel
-class AddWordViewModel: ViewModel() {
+class AddWordViewModel @Inject constructor(
+    private val randomGenerator: RandomGenerator
+): ViewModel() {
+
     private val _uiState: MutableStateFlow<AddWordUiState> = MutableStateFlow(
         AddWordUiState("")
     )
+    init {
+        val test = randomGenerator.generateSequence(10)
+    }
 
     val uiState = _uiState.asStateFlow()
 

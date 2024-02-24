@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     kotlin("kapt")
-    id("com.google.dagger.hilt.android") version "2.44" apply false
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -87,6 +87,11 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
-    implementation("com.google.dagger:hilt-android:2.44")
-    annotationProcessor("com.google.dagger:hilt-android-compiler:2.44")
+    implementation("com.google.dagger:hilt-android:2.50")
+    kapt("com.google.dagger:hilt-android-compiler:2.50")
+
+    // Hilt testing dependency
+    //androidTestImplementation("com.google.dagger:hilt-android-testing:2.44")
+    // Make Hilt generate code in the androidTest folder
+    //kaptAndroidTest("com.google.dagger:hilt-android-compiler:2.44")
 }
