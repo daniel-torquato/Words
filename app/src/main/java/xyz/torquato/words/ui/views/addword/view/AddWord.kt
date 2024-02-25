@@ -13,6 +13,8 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -39,11 +41,11 @@ fun AddWord(
         hasLowerCase = uiState.hasLowerCase,
         onLowerCaseChange = { viewModel.onLowerCaseChange() },
         symbolsList = uiState.symbolsList,
-        onSymbolsChange = {symbols -> viewModel.onSymbolsChange(symbols)},
+        onSymbolsChange = { symbols -> viewModel.onSymbolsChange(symbols) },
         hasSymbols = uiState.hasSymbols,
-        onHasSymbolsChange = {hasSymbols -> viewModel.onHasSymbolsChange(hasSymbols)},
+        onHasSymbolsChange = { hasSymbols -> viewModel.onHasSymbolsChange(hasSymbols) },
         hasUpperCase = uiState.hasUpperCase,
-        onUpperCaseChange = {hasUpperCase -> viewModel.onUpperCaseChange(hasUpperCase)}
+        onUpperCaseChange = { hasUpperCase -> viewModel.onUpperCaseChange(hasUpperCase) }
     )
 }
 
@@ -68,32 +70,20 @@ fun AddWordTemplate(
     symbolsList: String,
     onSymbolsChange: (String) -> Unit,
 ) {
-    Column {
+    Column(modifier = modifier) {
         Row {
-            OutlinedTextField(
-                modifier = modifier,
-                value = value,
-                onValueChange = onValueChanged
-            )
-            Button(
-                onClick = { onGenerateText() },
-                shape = RectangleShape
-            ) {
-                Text("+")
+            Row {
+                Checkbox(checked = hasNumbers, onCheckedChange = { onNumbersChange() })
+                Text("Numbers")
             }
-
-        }
-        Row {
-            Checkbox(checked = hasNumbers, onCheckedChange = { onNumbersChange() })
-            Text("has numbers")
-        }
-        Row {
-            Checkbox(checked = hasLowerCase, onCheckedChange = { onLowerCaseChange() })
-            Text("has lower case")
-        }
-        Row {
-            Checkbox(checked = hasUpperCase, onCheckedChange = { onUpperCaseChange(it) })
-            Text("has upper case")
+            Row {
+                Checkbox(checked = hasLowerCase, onCheckedChange = { onLowerCaseChange() })
+                Text("Lower case")
+            }
+            Row {
+                Checkbox(checked = hasUpperCase, onCheckedChange = { onUpperCaseChange(it) })
+                Text("Upper case")
+            }
         }
         Symbols(
             value = symbolsList,
@@ -107,8 +97,39 @@ fun AddWordTemplate(
             onDecrement = onLengthDecrement,
             onValueChange = onLengthChange
         )
+        Button(
+            onClick = { onGenerateText() },
+            shape = RectangleShape
+        ) {
+            Text("+")
+        }
+        GeneratedWord(
+            value = value,
+            onValueChanged = onValueChanged
+        )
     }
+}
 
+@Composable
+fun GeneratedWord(
+    value: String,
+    onValueChanged: (String) -> Unit
+) {
+    val clipBoardManager = LocalClipboardManager.current
+    Row {
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChanged
+        )
+        Button(
+            onClick = {
+                clipBoardManager.setText(AnnotatedString(value))
+            },
+            shape = RectangleShape
+        ) {
+            Text("c")
+        }
+    }
 }
 
 @Composable
