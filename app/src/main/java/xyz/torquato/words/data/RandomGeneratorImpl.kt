@@ -7,12 +7,13 @@ class RandomGeneratorImpl @Inject constructor() : RandomGenerator {
     override fun generateSequence(
         size: Int,
         hasNumbers: Boolean,
-        hasLowerCase: Boolean
+        hasLowerCase: Boolean,
+        hasSymbols: Boolean,
+        symbols: String
     ): String {
         val lowerCase = 'a'..'z'
         val upperCase = 'A'..'Z'
         val numbers = '0'..'9'
-        val symbols = "@$[]{}"
         val types = MutableList<Any>(0) {}
 
         if (hasNumbers)
@@ -21,7 +22,9 @@ class RandomGeneratorImpl @Inject constructor() : RandomGenerator {
         if (hasLowerCase)
             types.add(lowerCase)
         types.add(upperCase)
-        types.add(symbols)
+
+        if (hasSymbols)
+            types.add(symbols)
 
         return String((0 until size).map {
             when (val type = types.random()) {

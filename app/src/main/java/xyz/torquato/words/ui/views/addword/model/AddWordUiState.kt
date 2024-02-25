@@ -4,5 +4,7 @@ data class AddWordUiState (
     val word: String,
     val wordLength: String,
     val hasNumbers: Boolean,
-    val hasLowerCase: Boolean
+    val hasLowerCase: Boolean,
+    val hasSymbols: Boolean,
+    val symbolsList: String
 )

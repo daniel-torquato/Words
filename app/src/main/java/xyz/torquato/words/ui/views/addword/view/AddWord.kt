@@ -37,7 +37,11 @@ fun AddWord(
         hasNumbers = uiState.hasNumbers,
         onNumbersChange = { viewModel.onNumbersChange() },
         hasLowerCase = uiState.hasLowerCase,
-        onLowerCaseChange = { viewModel.onLowerCaseChange() }
+        onLowerCaseChange = { viewModel.onLowerCaseChange() },
+        symbolsList = uiState.symbolsList,
+        onSymbolsChange = {symbols -> viewModel.onSymbolsChange(symbols)},
+        hasSymbols = uiState.hasSymbols,
+        onHasSymbolsChange = {hasSymbols -> viewModel.onHasSymbolsChange(hasSymbols)}
     )
 }
 
@@ -54,7 +58,11 @@ fun AddWordTemplate(
     hasNumbers: Boolean,
     onNumbersChange: () -> Unit,
     hasLowerCase: Boolean,
-    onLowerCaseChange: () -> Unit
+    onLowerCaseChange: () -> Unit,
+    hasSymbols: Boolean,
+    onHasSymbolsChange: (Boolean) -> Unit,
+    symbolsList: String,
+    onSymbolsChange: (String) -> Unit,
 ) {
     Column {
         Row {
@@ -79,6 +87,12 @@ fun AddWordTemplate(
             Checkbox(checked = hasLowerCase, onCheckedChange = { onLowerCaseChange() })
             Text("has lower case")
         }
+        Symbols(
+            value = symbolsList,
+            onValueChange = onSymbolsChange,
+            hasSymbols = hasSymbols,
+            onHasSymbolsChange = onHasSymbolsChange
+        )
         WordLength(
             wordLength,
             onIncrement = onLengthIncrement,
@@ -87,6 +101,25 @@ fun AddWordTemplate(
         )
     }
 
+}
+
+@Composable
+fun Symbols(
+    value: String,
+    onValueChange: (String) -> Unit,
+    hasSymbols: Boolean,
+    onHasSymbolsChange: (Boolean) -> Unit
+) {
+    Row {
+        Text("Symbols: ")
+        TextField(
+            modifier = Modifier.width(100.dp),
+            value = value,
+            singleLine = true,
+            onValueChange = onValueChange
+        )
+        Checkbox(checked = hasSymbols, onCheckedChange = { onHasSymbolsChange(it) })
+    }
 }
 
 @Composable
@@ -135,7 +168,11 @@ fun AddWordPreview() {
             hasNumbers = true,
             onNumbersChange = {},
             hasLowerCase = true,
-            onLowerCaseChange = {}
+            onLowerCaseChange = {},
+            symbolsList = "@$[]{}",
+            onSymbolsChange = {},
+            hasSymbols = true,
+            onHasSymbolsChange = {}
         )
     }
 }

@@ -16,7 +16,7 @@ class AddWordViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<AddWordUiState> = MutableStateFlow(
-        AddWordUiState("", "10", hasNumbers = true, hasLowerCase = true)
+        AddWordUiState("", "10", hasNumbers = true, hasLowerCase = true, symbolsList = "@$[]{}", hasSymbols = true)
     )
 
     val uiState = _uiState.asStateFlow()
@@ -25,8 +25,18 @@ class AddWordViewModel @Inject constructor(
         val length = _uiState.value.wordLength.toInt()
         val hasNumbers = _uiState.value.hasNumbers
         val hasLowerCase = _uiState.value.hasLowerCase
+        val hasSymbols = _uiState.value.hasSymbols
+        val symbols = _uiState.value.symbolsList
         if (length > 0)
-            onValueChanged(randomGenerator.generateSequence(length, hasNumbers, hasLowerCase))
+            onValueChanged(
+                randomGenerator.generateSequence(
+                    length,
+                    hasNumbers,
+                    hasLowerCase,
+                    hasSymbols,
+                    symbols
+                )
+            )
     }
 
     fun onValueChanged(newValue: String) {
@@ -79,6 +89,22 @@ class AddWordViewModel @Inject constructor(
             val length = it.wordLength.toInt()
             it.copy(
                 wordLength = (if (length > 0) length - 1 else 0).toString()
+            )
+        }
+    }
+
+    fun onSymbolsChange(newSymbols: String) {
+        _uiState.update {
+            it.copy(
+                symbolsList = newSymbols
+            )
+        }
+    }
+
+    fun onHasSymbolsChange(hasSymbols: Boolean) {
+        _uiState.update {
+            it.copy(
+                hasSymbols = hasSymbols
             )
         }
     }
