@@ -16,27 +16,32 @@ class AddWordViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<AddWordUiState> = MutableStateFlow(
-        AddWordUiState("", "10", hasNumbers = true, hasLowerCase = true, symbolsList = "@$[]{}", hasSymbols = true)
+        AddWordUiState(
+            "",
+            "10",
+            hasNumbers = true,
+            hasLowerCase = true,
+            symbolsList = "@$[]{}",
+            hasSymbols = true,
+            hasUpperCase = true
+        )
     )
 
     val uiState = _uiState.asStateFlow()
 
     fun onGenerateTest() {
-        val length = _uiState.value.wordLength.toInt()
-        val hasNumbers = _uiState.value.hasNumbers
-        val hasLowerCase = _uiState.value.hasLowerCase
-        val hasSymbols = _uiState.value.hasSymbols
-        val symbols = _uiState.value.symbolsList
-        if (length > 0)
-            onValueChanged(
+        onValueChanged(
+            with(_uiState.value) {
                 randomGenerator.generateSequence(
-                    length,
-                    hasNumbers,
-                    hasLowerCase,
-                    hasSymbols,
-                    symbols
+                    size = wordLength.toInt(),
+                    hasNumbers = hasNumbers,
+                    hasLowerCase = hasLowerCase,
+                    hasUpperCase = hasUpperCase,
+                    hasSymbols = hasSymbols,
+                    symbols = symbolsList,
                 )
-            )
+            }
+        )
     }
 
     fun onValueChanged(newValue: String) {
@@ -59,6 +64,13 @@ class AddWordViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 hasLowerCase = !it.hasLowerCase
+            )
+        }
+    }
+    fun onUpperCaseChange(upperCase: Boolean) {
+        _uiState.update {
+            it.copy(
+                hasUpperCase = upperCase
             )
         }
     }

@@ -41,7 +41,9 @@ fun AddWord(
         symbolsList = uiState.symbolsList,
         onSymbolsChange = {symbols -> viewModel.onSymbolsChange(symbols)},
         hasSymbols = uiState.hasSymbols,
-        onHasSymbolsChange = {hasSymbols -> viewModel.onHasSymbolsChange(hasSymbols)}
+        onHasSymbolsChange = {hasSymbols -> viewModel.onHasSymbolsChange(hasSymbols)},
+        hasUpperCase = uiState.hasUpperCase,
+        onUpperCaseChange = {hasUpperCase -> viewModel.onUpperCaseChange(hasUpperCase)}
     )
 }
 
@@ -59,6 +61,8 @@ fun AddWordTemplate(
     onNumbersChange: () -> Unit,
     hasLowerCase: Boolean,
     onLowerCaseChange: () -> Unit,
+    hasUpperCase: Boolean,
+    onUpperCaseChange: (Boolean) -> Unit,
     hasSymbols: Boolean,
     onHasSymbolsChange: (Boolean) -> Unit,
     symbolsList: String,
@@ -86,6 +90,10 @@ fun AddWordTemplate(
         Row {
             Checkbox(checked = hasLowerCase, onCheckedChange = { onLowerCaseChange() })
             Text("has lower case")
+        }
+        Row {
+            Checkbox(checked = hasUpperCase, onCheckedChange = { onUpperCaseChange(it) })
+            Text("has upper case")
         }
         Symbols(
             value = symbolsList,
@@ -172,7 +180,9 @@ fun AddWordPreview() {
             symbolsList = "@$[]{}",
             onSymbolsChange = {},
             hasSymbols = true,
-            onHasSymbolsChange = {}
+            onHasSymbolsChange = {},
+            hasUpperCase = true,
+            onUpperCaseChange = {}
         )
     }
 }

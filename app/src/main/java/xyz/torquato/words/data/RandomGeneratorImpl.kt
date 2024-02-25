@@ -8,9 +8,12 @@ class RandomGeneratorImpl @Inject constructor() : RandomGenerator {
         size: Int,
         hasNumbers: Boolean,
         hasLowerCase: Boolean,
+        hasUpperCase: Boolean,
         hasSymbols: Boolean,
         symbols: String
     ): String {
+        if (size <= 0)
+            return ""
         val lowerCase = 'a'..'z'
         val upperCase = 'A'..'Z'
         val numbers = '0'..'9'
@@ -21,18 +24,22 @@ class RandomGeneratorImpl @Inject constructor() : RandomGenerator {
 
         if (hasLowerCase)
             types.add(lowerCase)
-        types.add(upperCase)
+
+        if (hasUpperCase)
+            types.add(upperCase)
 
         if (hasSymbols)
             types.add(symbols)
 
-        return String((0 until size).map {
-            when (val type = types.random()) {
-                is CharSequence -> type.random()
-                is CharRange -> type.random()
-                else -> '.'
-            }
-        }.toCharArray())
+        return if (types.size > 0)
+            String((0 until size).map {
+                when (val type = types.random()) {
+                    is CharSequence -> type.random()
+                    is CharRange -> type.random()
+                    else -> '.'
+                }
+            }.toCharArray())
+        else ""
 
     }
 }
