@@ -7,26 +7,60 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import xyz.torquato.words.data.RandomGenerator
 import xyz.torquato.words.ui.views.addword.model.AddWordUiState
+import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
 class AddWordViewModel @Inject constructor(
     private val randomGenerator: RandomGenerator
-): ViewModel() {
+) : ViewModel() {
 
     private val _uiState: MutableStateFlow<AddWordUiState> = MutableStateFlow(
-        AddWordUiState("")
+        AddWordUiState("", "10")
     )
-    init {
-        val test = randomGenerator.generateSequence(10)
-    }
 
     val uiState = _uiState.asStateFlow()
+
+    fun onGenerateTest() {
+        val length = _uiState.value.wordLength.toInt()
+        if (length > 0)
+            onValueChanged(randomGenerator.generateSequence(length))
+    }
 
     fun onValueChanged(newValue: String) {
         _uiState.update {
             it.copy(
                 word = newValue
+            )
+        }
+    }
+
+    fun onLengthChange(newLength: String) {
+        val pattern = Pattern.compile("\\d+")
+        _uiState.update {
+            it.copy(
+                wordLength =
+                if (pattern.matcher(newLength).matches())
+                    newLength
+                else
+                    ""
+            )
+        }
+    }
+
+    fun onLengthIncrement() {
+        _uiState.update {
+            it.copy(
+                wordLength = (it.wordLength.toInt() + 1).toString()
+            )
+        }
+    }
+
+    fun onLengthDecrement() {
+        _uiState.update {
+            val length = it.wordLength.toInt()
+            it.copy(
+                wordLength = (if (length > 0) length - 1 else 0).toString()
             )
         }
     }
