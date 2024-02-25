@@ -11,9 +11,6 @@ import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,7 +33,10 @@ fun AddWord(
         wordLength = uiState.wordLength,
         onLengthChange = { newLength -> viewModel.onLengthChange(newLength) },
         onLengthIncrement = { viewModel.onLengthIncrement() },
-        onLengthDecrement = { viewModel.onLengthDecrement() }
+        onLengthDecrement = { viewModel.onLengthDecrement() },
+        hasNumbers = uiState.hasNumbers,
+        onNumbersChange = {viewModel.onNumbersChange()}
+
     )
 }
 
@@ -49,9 +49,10 @@ fun AddWordTemplate(
     wordLength: String,
     onLengthIncrement: () -> Unit,
     onLengthDecrement: () -> Unit,
-    onLengthChange: (String) -> Unit
+    onLengthChange: (String) -> Unit,
+    hasNumbers: Boolean,
+    onNumbersChange: () -> Unit
 ) {
-    var hasNumber: Boolean by remember { mutableStateOf(false) }
     Column {
         Row {
             OutlinedTextField(
@@ -68,11 +69,7 @@ fun AddWordTemplate(
 
         }
         Row {
-            Checkbox(checked = hasNumber, onCheckedChange = { hasNumber = !hasNumber })
-            Text("has numbers")
-        }
-        Row {
-            Checkbox(checked = hasNumber, onCheckedChange = { hasNumber = !hasNumber })
+            Checkbox(checked = hasNumbers, onCheckedChange = { onNumbersChange() })
             Text("has numbers")
         }
         WordLength(
@@ -127,7 +124,9 @@ fun AddWordPreview() {
             wordLength = "10",
             onLengthIncrement = {},
             onLengthDecrement = {},
-            onLengthChange = {}
+            onLengthChange = {},
+            hasNumbers = true,
+            onNumbersChange = {}
         )
     }
 }

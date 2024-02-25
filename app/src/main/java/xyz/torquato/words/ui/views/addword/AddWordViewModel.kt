@@ -16,21 +16,30 @@ class AddWordViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<AddWordUiState> = MutableStateFlow(
-        AddWordUiState("", "10")
+        AddWordUiState("", "10", true)
     )
 
     val uiState = _uiState.asStateFlow()
 
     fun onGenerateTest() {
         val length = _uiState.value.wordLength.toInt()
+        val hasNumbers = _uiState.value.hasNumbers
         if (length > 0)
-            onValueChanged(randomGenerator.generateSequence(length))
+            onValueChanged(randomGenerator.generateSequence(length, hasNumbers))
     }
 
     fun onValueChanged(newValue: String) {
         _uiState.update {
             it.copy(
                 word = newValue
+            )
+        }
+    }
+
+    fun onNumbersChange() {
+        _uiState.update {
+            it.copy(
+                hasNumbers = !it.hasNumbers
             )
         }
     }
