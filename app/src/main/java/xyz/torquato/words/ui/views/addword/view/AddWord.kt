@@ -35,8 +35,9 @@ fun AddWord(
         onLengthIncrement = { viewModel.onLengthIncrement() },
         onLengthDecrement = { viewModel.onLengthDecrement() },
         hasNumbers = uiState.hasNumbers,
-        onNumbersChange = {viewModel.onNumbersChange()}
-
+        onNumbersChange = { viewModel.onNumbersChange() },
+        hasLowerCase = uiState.hasLowerCase,
+        onLowerCaseChange = { viewModel.onLowerCaseChange() }
     )
 }
 
@@ -51,7 +52,9 @@ fun AddWordTemplate(
     onLengthDecrement: () -> Unit,
     onLengthChange: (String) -> Unit,
     hasNumbers: Boolean,
-    onNumbersChange: () -> Unit
+    onNumbersChange: () -> Unit,
+    hasLowerCase: Boolean,
+    onLowerCaseChange: () -> Unit
 ) {
     Column {
         Row {
@@ -71,6 +74,10 @@ fun AddWordTemplate(
         Row {
             Checkbox(checked = hasNumbers, onCheckedChange = { onNumbersChange() })
             Text("has numbers")
+        }
+        Row {
+            Checkbox(checked = hasLowerCase, onCheckedChange = { onLowerCaseChange() })
+            Text("has lower case")
         }
         WordLength(
             wordLength,
@@ -126,7 +133,9 @@ fun AddWordPreview() {
             onLengthDecrement = {},
             onLengthChange = {},
             hasNumbers = true,
-            onNumbersChange = {}
+            onNumbersChange = {},
+            hasLowerCase = true,
+            onLowerCaseChange = {}
         )
     }
 }

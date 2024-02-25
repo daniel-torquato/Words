@@ -16,7 +16,7 @@ class AddWordViewModel @Inject constructor(
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<AddWordUiState> = MutableStateFlow(
-        AddWordUiState("", "10", true)
+        AddWordUiState("", "10", hasNumbers = true, hasLowerCase = true)
     )
 
     val uiState = _uiState.asStateFlow()
@@ -24,8 +24,9 @@ class AddWordViewModel @Inject constructor(
     fun onGenerateTest() {
         val length = _uiState.value.wordLength.toInt()
         val hasNumbers = _uiState.value.hasNumbers
+        val hasLowerCase = _uiState.value.hasLowerCase
         if (length > 0)
-            onValueChanged(randomGenerator.generateSequence(length, hasNumbers))
+            onValueChanged(randomGenerator.generateSequence(length, hasNumbers, hasLowerCase))
     }
 
     fun onValueChanged(newValue: String) {
@@ -40,6 +41,14 @@ class AddWordViewModel @Inject constructor(
         _uiState.update {
             it.copy(
                 hasNumbers = !it.hasNumbers
+            )
+        }
+    }
+
+    fun onLowerCaseChange() {
+        _uiState.update {
+            it.copy(
+                hasLowerCase = !it.hasLowerCase
             )
         }
     }
