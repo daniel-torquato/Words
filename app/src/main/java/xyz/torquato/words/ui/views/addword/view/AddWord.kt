@@ -2,23 +2,40 @@ package xyz.torquato.words.ui.views.addword.view
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
-import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.BaselineShift
+import androidx.compose.ui.text.style.LineHeightStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.TextUnit
+import androidx.compose.ui.unit.TextUnitType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import xyz.torquato.words.R
 import xyz.torquato.words.ui.theme.WordsTheme
+import xyz.torquato.words.ui.utils.lineBelow
 import xyz.torquato.words.ui.views.addword.AddWordViewModel
 
 @Composable
@@ -70,18 +87,40 @@ fun AddWordTemplate(
     symbolsList: String,
     onSymbolsChange: (String) -> Unit,
 ) {
-    Column(modifier = modifier) {
+    Column(modifier = modifier.padding(5.dp)) {
         Row {
-            Row {
-                Checkbox(checked = hasNumbers, onCheckedChange = { onNumbersChange() })
+            Row(
+                modifier = Modifier,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    modifier = Modifier
+                        .size(36.dp),
+                    checked = hasNumbers,
+                    onCheckedChange = { onNumbersChange() }
+                )
                 Text("Numbers")
             }
-            Row {
-                Checkbox(checked = hasLowerCase, onCheckedChange = { onLowerCaseChange() })
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    modifier = Modifier
+                        .size(36.dp),
+                    checked = hasLowerCase,
+                    onCheckedChange = { onLowerCaseChange() }
+                )
                 Text("Lower case")
             }
-            Row {
-                Checkbox(checked = hasUpperCase, onCheckedChange = { onUpperCaseChange(it) })
+            Row(
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Checkbox(
+                    modifier = Modifier
+                        .size(36.dp),
+                    checked = hasUpperCase,
+                    onCheckedChange = { onUpperCaseChange(it) }
+                )
                 Text("Upper case")
             }
         }
@@ -98,10 +137,11 @@ fun AddWordTemplate(
             onValueChange = onLengthChange
         )
         Button(
+            modifier = Modifier.fillMaxWidth(),
             onClick = { onGenerateText() },
             shape = RectangleShape
         ) {
-            Text("+")
+            Text("Generate word")
         }
         GeneratedWord(
             value = value,
@@ -116,18 +156,32 @@ fun GeneratedWord(
     onValueChanged: (String) -> Unit
 ) {
     val clipBoardManager = LocalClipboardManager.current
-    Row {
-        OutlinedTextField(
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.Bottom
+    ) {
+        BasicTextField(
+            modifier = Modifier
+                .padding(10.dp)
+                .weight(1f)
+                .lineBelow(),
             value = value,
-            onValueChange = onValueChanged
+            onValueChange = onValueChanged,
+            textStyle = TextStyle(
+                textAlign = TextAlign.Center,
+                baselineShift = BaselineShift(0.5f),
+                lineHeightStyle = LineHeightStyle(
+                    alignment = LineHeightStyle.Alignment.Center,
+                    trim = LineHeightStyle.Trim.None
+                )
+            )
         )
-        Button(
+        IconButton(
             onClick = {
                 clipBoardManager.setText(AnnotatedString(value))
-            },
-            shape = RectangleShape
+            }
         ) {
-            Text("c")
+            Icon(painterResource(id = R.drawable.baseline_content_copy_24), "Copy content")
         }
     }
 }
@@ -139,15 +193,35 @@ fun Symbols(
     hasSymbols: Boolean,
     onHasSymbolsChange: (Boolean) -> Unit
 ) {
-    Row {
-        Text("Symbols: ")
-        TextField(
-            modifier = Modifier.width(100.dp),
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(
+            text = "Symbols: ",
+            letterSpacing = TextUnit(1f, TextUnitType(1)),
+            maxLines = 1
+        )
+        BasicTextField(
+            modifier = Modifier
+                .width(100.dp)
+                .lineBelow(),
             value = value,
             singleLine = true,
-            onValueChange = onValueChange
+            onValueChange = onValueChange,
+            textStyle = TextStyle(
+                textAlign = TextAlign.Center,
+                baselineShift = BaselineShift(0.3f),
+                lineHeightStyle = LineHeightStyle(
+                    alignment = LineHeightStyle.Alignment.Center,
+                    trim = LineHeightStyle.Trim.None
+                )
+            )
         )
-        Checkbox(checked = hasSymbols, onCheckedChange = { onHasSymbolsChange(it) })
+        Checkbox(
+            modifier = Modifier.size(36.dp),
+            checked = hasSymbols,
+            onCheckedChange = { onHasSymbolsChange(it) }
+        )
     }
 }
 
@@ -158,25 +232,39 @@ fun WordLength(
     onIncrement: () -> Unit,
     onDecrement: () -> Unit,
 ) {
-    Row {
+    Row(
+        verticalAlignment = Alignment.CenterVertically
+    ) {
         Text("Length: ")
-        TextField(
-            modifier = Modifier.width(80.dp),
+        BasicTextField(
+            modifier = Modifier
+                .padding(5.dp)
+                .width(80.dp)
+                .lineBelow(),
             value = value,
-            singleLine = true,
-            onValueChange = onValueChange
+            onValueChange = onValueChange,
+            textStyle = TextStyle(
+                textAlign = TextAlign.Center,
+                baselineShift = BaselineShift(0.2f)
+            )
         )
-        Button(
+        FilledIconButton(
+            modifier = Modifier
+                .padding(2.dp)
+                .size(30.dp),
             onClick = { onIncrement() },
             shape = RectangleShape
         ) {
-            Text("+")
+            Icon(Icons.Rounded.Add, "increment action")
         }
-        Button(
+        FilledIconButton(
+            modifier = Modifier
+                .padding(2.dp)
+                .size(30.dp),
             onClick = { onDecrement() },
             shape = RectangleShape
         ) {
-            Text("-")
+            Icon(painterResource(id = R.drawable.baseline_remove_24), "decrement action")
         }
     }
 }
