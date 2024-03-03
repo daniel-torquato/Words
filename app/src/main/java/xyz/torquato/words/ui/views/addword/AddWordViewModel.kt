@@ -1,18 +1,23 @@
 package xyz.torquato.words.ui.views.addword
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import xyz.torquato.words.data.RandomGenerator
+import xyz.torquato.words.data.Word
+import xyz.torquato.words.data.WordsRepository
 import xyz.torquato.words.ui.views.addword.model.AddWordUiState
 import java.util.regex.Pattern
 import javax.inject.Inject
 
 @HiltViewModel
 class AddWordViewModel @Inject constructor(
-    private val randomGenerator: RandomGenerator
+    private val wordsRepository: WordsRepository,
+    private val randomGenerator: RandomGenerator,
 ) : ViewModel() {
 
     private val _uiState: MutableStateFlow<AddWordUiState> = MutableStateFlow(
@@ -29,6 +34,12 @@ class AddWordViewModel @Inject constructor(
 
     val uiState = _uiState.asStateFlow()
 
+    private fun onSaveWord() {
+        viewModelScope.launch {
+            wordsRepository.insertWord(Word(_uiState.value.word))
+        }
+    }
+
     fun onGenerateTest() {
         onValueChanged(
             with(_uiState.value) {
@@ -42,6 +53,7 @@ class AddWordViewModel @Inject constructor(
                 )
             }
         )
+        onSaveWord()
     }
 
     fun onValueChanged(newValue: String) {
