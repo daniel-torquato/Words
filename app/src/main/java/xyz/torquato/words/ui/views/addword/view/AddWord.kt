@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.Add
+import androidx.compose.material.icons.rounded.Send
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.FilledIconButton
@@ -49,6 +50,7 @@ fun AddWord(
         value = uiState.word,
         onValueChanged = { input -> viewModel.onValueChanged(input) },
         onGenerateText = { viewModel.onGenerateTest() },
+        onSendWord = {viewModel.onSaveWord() },
         wordLength = uiState.wordLength,
         onLengthChange = { newLength -> viewModel.onLengthChange(newLength) },
         onLengthIncrement = { viewModel.onLengthIncrement() },
@@ -72,6 +74,7 @@ fun AddWordTemplate(
     value: String,
     onValueChanged: (input: String) -> Unit,
     onGenerateText: () -> Unit,
+    onSendWord: () -> Unit,
     wordLength: String,
     onLengthIncrement: () -> Unit,
     onLengthDecrement: () -> Unit,
@@ -145,7 +148,8 @@ fun AddWordTemplate(
         }
         GeneratedWord(
             value = value,
-            onValueChanged = onValueChanged
+            onValueChanged = onValueChanged,
+            onSendWord = onSendWord
         )
     }
 }
@@ -153,13 +157,17 @@ fun AddWordTemplate(
 @Composable
 fun GeneratedWord(
     value: String,
-    onValueChanged: (String) -> Unit
+    onValueChanged: (String) -> Unit,
+    onSendWord: () -> Unit
 ) {
     val clipBoardManager = LocalClipboardManager.current
     Row(
         modifier = Modifier.fillMaxWidth(),
         verticalAlignment = Alignment.Bottom
     ) {
+        IconButton(onClick = onSendWord) {
+            Icon(Icons.Rounded.Send, "Send to list content")
+        }
         BasicTextField(
             modifier = Modifier
                 .padding(10.dp)
@@ -278,6 +286,7 @@ fun AddWordPreview() {
             value = "Word",
             onValueChanged = { _ -> },
             onGenerateText = {},
+            onSendWord = {},
             wordLength = "10",
             onLengthIncrement = {},
             onLengthDecrement = {},

@@ -1,5 +1,6 @@
 package xyz.torquato.words.data
 
+import android.util.Log
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
@@ -8,7 +9,10 @@ class WordListRepository @Inject constructor(private val wordDao: WordDao): Word
 
     override fun getItemStream(id: String): Flow<Word?> = wordDao.getWord(id)
 
-    override suspend fun insertWord(word: Word) = wordDao.insert(word)
+    override suspend fun insertWord(word: Word) {
+        Log.d("MyTag", "Inserting $word")
+        wordDao.insert(word)
+    }
 
     override suspend fun deleteWord(word: Word) = wordDao.delete(word)
 

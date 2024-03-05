@@ -1,5 +1,6 @@
 package xyz.torquato.words.ui.views.addword
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -34,7 +35,8 @@ class AddWordViewModel @Inject constructor(
 
     val uiState = _uiState.asStateFlow()
 
-    private fun onSaveWord() {
+    fun onSaveWord() {
+        Log.d("MyTag", _uiState.value.word)
         viewModelScope.launch {
             wordsRepository.insertWord(Word(_uiState.value.word))
         }
@@ -53,7 +55,6 @@ class AddWordViewModel @Inject constructor(
                 )
             }
         )
-        onSaveWord()
     }
 
     fun onValueChanged(newValue: String) {
