@@ -42,7 +42,8 @@ import xyz.torquato.words.ui.views.addword.AddWordViewModel
 @Composable
 fun AddWord(
     modifier: Modifier = Modifier,
-    viewModel: AddWordViewModel = viewModel()
+    viewModel: AddWordViewModel = viewModel(),
+    onSendWord: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsState()
     AddWordTemplate(
@@ -50,7 +51,10 @@ fun AddWord(
         value = uiState.word,
         onValueChanged = { input -> viewModel.onValueChanged(input) },
         onGenerateText = { viewModel.onGenerateTest() },
-        onSendWord = {viewModel.onSaveWord() },
+        onSendWord = {
+            viewModel.onSaveWord()
+            onSendWord()
+        },
         wordLength = uiState.wordLength,
         onLengthChange = { newLength -> viewModel.onLengthChange(newLength) },
         onLengthIncrement = { viewModel.onLengthIncrement() },

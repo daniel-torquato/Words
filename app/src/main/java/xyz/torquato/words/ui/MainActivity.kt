@@ -4,19 +4,13 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.Surface
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import dagger.hilt.android.AndroidEntryPoint
 import xyz.torquato.words.ui.theme.WordsTheme
 import xyz.torquato.words.ui.views.addword.AddWordViewModel
@@ -34,43 +28,26 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            var currentScreen by remember { mutableStateOf(WordScreen.ADD_WORD)}
-            Scaffold(
-                topBar = {
-                    Row {
-                        WordScreen.entries.map {
-                            Button(
-                                onClick = { currentScreen = it},
-                                shape = RectangleShape,
-                                colors = ButtonDefaults.buttonColors(
-                                    containerColor = Color.White,
-                                    contentColor = Color.Gray
-                                )
-                            ) {
-                                Text(it.route)
-                            }
-                        }
-                    }
-                }
-            ) { paddingValues ->
-                WordsTheme {
+            var currentScreen by remember { mutableStateOf(WordScreen.ADD_WORD) }
+            WordsTheme(darkTheme = true) {
+                Surface(modifier = Modifier.fillMaxSize()) {
                     WordNav(
-                        modifier = Modifier.padding(paddingValues),
                         screen = currentScreen,
                         addWord = {
                             AddWord(
-                                viewModel = addWordViewModel
+                                viewModel = addWordViewModel,
+                                onSendWord = { currentScreen = WordScreen.WORDS_LIST }
                             )
                         },
                         wordsList = {
                             WordList(
-                                viewModel = wordListViewModel
+                                viewModel = wordListViewModel,
+                                onAddWord = { currentScreen = WordScreen.ADD_WORD }
                             )
                         }
                     )
                 }
             }
-
         }
     }
 }
