@@ -1,4 +1,4 @@
-package xyz.torquato.words.ui.views.wordnav.model
+package xyz.torquato.words.data.navidation.model
 
 enum class WordScreen {
     ADD_WORD,
